@@ -20,27 +20,10 @@ attribute 'awscli/compile_time',
   :required => "optional",
   :recipes => [ "awscli::default" ]
   
-attribute 'awscli/aws_access_key_id',
-  :display_name => "AWS Access Key Id",
-  :description => "The access key ID. Used to configure the awscli tool.",
+attribute 'awscli/config_profiles',
+  :display_name => "Configuration Profiles",
+  :description => "A hash of profile names to hashes of key-value pairs specifying configuration options",
   :default => "nil",
-  :type => "string",
+  :type => "hash",
   :required => "optional",
   :recipes => [ "awscli::default" ]
-  
-attribute 'awscli/aws_access_key_id',
-  :display_name => "AWS Secret Access Key",
-  :description => "The secret access key. Used to configure the awscli tool.",
-  :default => "nil",
-  :type => "string",
-  :required => "optional",
-  :recipes => [ "awscli::default" ]
-
-attribute 'awscli/default_region',
-  :display_name => "Default AWS region",
-  :description => "The default AWS region. Used to configure the awscli tool.",
-  :default => "nil",
-  :type => "string",
-  :required => "optional",
-  :recipes => [ "awscli::default" ]
-  
