@@ -1,7 +1,7 @@
 awscli
 ======
 
-Installs and configures the awscli command-line tool (the new one, supporting all AWS services).
+Installs and configures the awscli command-line tool [(the new one, supporting all AWS services)][1]
 
 Configuring
 ===========
@@ -54,3 +54,5 @@ are not ready until some time after the instance boots. Calling the awscli befor
 credentials are ready will fail.
 
 If you specify AWS credentials in the config file, then you won't need to worry about this.
+
+[1]: http://aws.amazon.com/cli/
