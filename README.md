@@ -1,7 +1,7 @@
 awscli
 ======
 
-Installs the awscli command-line tool (the new one, supporting all AWS services).
+Installs and configures the awscli command-line tool (the new one, supporting all AWS services).
 
 Configuring
 ===========
@@ -19,26 +19,38 @@ Role then the awscli will pick up that role's credentials automatically from the
 metadata, so you may not need to configure the access keys. You might still want to configure the
 default region.
 
-The following AWS Access attributes are optional and are not specified by default. If present these 
-will be used configure awscli:
+The following attributes are optional and are not specified by default. If present these 
+will be used configure the awscli:
 
-    [:awscli][:aws_access_key_id]     - The AWS Access Key ID to use.
-    [:awscli][:aws_secret_access_key] - The AWS Secret Access Key to use.
+    [:awscli][:config_profiles]       - a hash of configuration profiles
+    [:awscli][:config_profiles]<profile_key> - the name of the profile
+    [:awscli][:config_profiles][<profile_key>]<option_name> = <option_value> - config options
     
-The optional default region can also be set via this attritbue, which is not specified by default:
+For example, to configure the default profile, specify the following:
 
-    [:awscli][:default_region]        - The default AWS region to use.
-
+    'awscli': {
+      'config_profiles': {
+        'default' : {
+          'region'               : 'us-east-1',
+          'aws_acces_key_id'     : 'SOMESECRET',
+          'aws_secret_access_key : 'ANOTHERSECRET'
+        }
+      }
+    }
+    
+The keys and values inside the profile_key hash are placed directly into the awscli config file.
+Use this mechanism to specify additional configuration (such as output style) and additional profiles.
+    
 Using
 =====
 
-If you use the awscli in your recipes, you will probably want to make use of the
+If you use the awscli in your recipes, you may want to make use of the
 library provided by this cookbook, InstanceMetadata. It provides a method
-`wait_for_instance_IAM_metadata_to_be_available` which you should call before attempting
-to use the awscli.
+`wait_for_instance_IAM_metadata_to_be_available` which you may call before attempting
+to use the awscli with credentials from the instance's IAM role.
 
-Here's why: When you are running on an OpsWorks instance with an IAM role, the IAM credentials
+Here's why: When you are running on an instance with an IAM role, the IAM credentials
 are not ready until some time after the instance boots. Calling the awscli before the IAM
 credentials are ready will fail.
 
-If you manually install AWS credentials, then you won't need to worry about this.
+If you specify AWS credentials in the config file, then you won't need to worry about this.
