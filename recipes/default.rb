@@ -26,7 +26,7 @@ if node[:awscli][:config_profiles]
     recursive true
     owner 'root'
     group 'root'
-    mode 00600
+    mode 00700
     not_if { ::File.exists?(::File.dirname(config_file)) }
     if node[:awscli][:compile_time]
       action :nothing
