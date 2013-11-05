@@ -14,7 +14,7 @@ will be installed during converge time. It can be set to `true` to install at co
 Do this if you need to use the awscli in your recipes during compile time (for example, to list
 the EBS attachments of the current instance).
 
-This cookbook will optionally configure the awscli tool. If your OpsWorks instance has an IAM
+This cookbook will optionally configure the awscli tool. If your instance has an IAM
 Role then the awscli will pick up that role's credentials automatically from the instance
 metadata, so you may not need to configure the access keys. You might still want to configure the
 default region.
