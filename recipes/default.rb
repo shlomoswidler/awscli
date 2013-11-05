@@ -18,3 +18,33 @@ end
 if node[:awscli][:compile_time]
   r.run_action(:run)
 end
+
+config_file="/root/.aws/config"
+
+r = directory ::File.dirname(config_file) do
+  recursive true
+  owner 'root'
+  group 'root'
+  mode 00600
+  not_if { ::File.exists?(::File.dirname(config_file)) }
+  if node[:awscli][:compile_time]
+    action :nothing
+  end
+end
+if node[:awscli][:compile_time]
+  r.run_action(:create)
+end
+
+r = template config_file do
+  mode 00600
+  owner 'root'
+  group 'root'
+  source 'config.erb'
+  not_if { ::File.exists?(config_file) }
+  if node[:awscli][:compile_time]
+    action :nothing
+  end
+end
+if node[:awscli][:compile_time]
+  r.run_action(:create)
+end
