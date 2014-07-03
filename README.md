@@ -6,6 +6,8 @@ Installs and configures the awscli command-line tool [(the new one, supporting a
 Configuring
 ===========
 
+##### `[:awscli][:compile_time]`
+
 You can control when the awscli tool will be installed during the chef run, either
 in the compile stage or in the converge stage.
 
@@ -19,13 +21,15 @@ Role then the awscli will pick up that role's credentials automatically from the
 metadata, so you may not need to configure the access keys. You might still want to configure the
 default region.
 
-The following attributes are optional and are not specified by default. If present these 
+##### `[:awscli][:config_profiles]`
+
+The following attributes are optional and are not specified by default. If present these
 will be used configure the awscli:
 
     [:awscli][:config_profiles]       - a hash of configuration profiles
     [:awscli][:config_profiles]<profile_key> - the name of the profile
     [:awscli][:config_profiles][<profile_key>]<option_name> = <option_value> - config options
-    
+
 For example, to configure the default profile, specify the following:
 
     'awscli': {
@@ -37,10 +41,17 @@ For example, to configure the default profile, specify the following:
         }
       }
     }
-    
+
 The keys and values inside the profile_key hash are placed directly into the awscli config file.
 Use this mechanism to specify additional configuration (such as output style) and additional profiles.
-    
+
+##### `[:awscli][:user]`
+
+The aws configuration is installed under the `root` user account by default.
+Override this if needed;
+For example, AWS ubuntu instances use the `ubuntu` user instead of `root`.
+When overriding the configuration will be saved under `/home/user`.
+
 Using
 =====
 
