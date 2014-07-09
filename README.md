@@ -32,7 +32,7 @@ For example, to configure the default profile, specify the following:
       'config_profiles': {
         'default' : {
           'region'               : 'us-east-1',
-          'aws_acces_key_id'     : 'SOMESECRET',
+          'aws_access_key_id'    : 'SOMESECRET',
           'aws_secret_access_key : 'ANOTHERSECRET'
         }
       }
