@@ -20,12 +20,17 @@ if node[:awscli][:compile_time]
 end
 
 if node[:awscli][:config_profiles]
-  config_file="/root/.aws/config"
+  user = node[:awscli][:user]
+  if user == "root"
+    config_file="/#{user}/.aws/config"
+  else
+    config_file="/home/#{user}/.aws/config"
+  end
 
   r = directory ::File.dirname(config_file) do
     recursive true
-    owner 'root'
-    group 'root'
+    owner user
+    group user
     mode 00700
     not_if { ::File.exists?(::File.dirname(config_file)) }
     if node[:awscli][:compile_time]
@@ -38,8 +43,8 @@ if node[:awscli][:config_profiles]
 
   r = template config_file do
     mode 00600
-    owner 'root'
-    group 'root'
+    owner user
+    group user
     source 'config.erb'
     not_if { ::File.exists?(config_file) }
     if node[:awscli][:compile_time]
@@ -49,5 +54,5 @@ if node[:awscli][:config_profiles]
   if node[:awscli][:compile_time]
     r.run_action(:create)
   end
-  
+
 end
