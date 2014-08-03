@@ -1,7 +1,8 @@
 awscli
 ======
 
-Installs and configures the awscli command-line tool `aws` [(the new one, supporting all AWS services)][1]
+Installs and configures the awscli command-line tool `aws` [(the new one, supporting all AWS services)][1].
+
 For ubuntu and debian platforms, also installs command-ine completion for the `aws` command for interactive bash shells.
 
 Configuring
