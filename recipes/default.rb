@@ -66,4 +66,5 @@ unless completion_file.nil?
     # newline is important
     content "complete -C aws_completer aws
 "
+  end
 end
