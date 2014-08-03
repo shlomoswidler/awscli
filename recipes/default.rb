@@ -4,7 +4,7 @@ case node[:platform]
 when 'debian','ubuntu'
   file = "/usr/local/bin/aws"
   cmd = "apt-get install -y python-pip && pip install awscli"
-  completion_file='/etc/bash_completion.d/awscli'
+  completion_file='/etc/bash_completion.d/aws'
 when 'redhat','centos','fedora','amazon','scientific'
   file = "/usr/bin/aws"
   cmd = "yum -y install python-pip && pip install awscli"
@@ -55,17 +55,15 @@ if node[:awscli][:config_profiles]
   if node[:awscli][:compile_time]
     r.run_action(:create)
   end
-  
-  unless completion_file.nil?
-    file completion_file do
-      action :create_if_missing
-      mode 00644
-      owner 'root'
-      group 'root'
-      # newline is important
-      content "complete -C aws_completer aws
-    "
-    end
-  end
+end
 
+unless completion_file.nil?
+  file completion_file do
+    action :create_if_missing
+    mode 00644
+    owner 'root'
+    group 'root'
+    # newline is important
+    content "complete -C aws_completer aws
+"
 end
