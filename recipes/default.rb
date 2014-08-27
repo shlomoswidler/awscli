@@ -1,17 +1,17 @@
 # installs Amazon's awscli tools
 
 case node[:platform]
-when 'debian','ubuntu'
-  file = "/usr/local/bin/aws"
-  cmd = "apt-get install -y python-pip && pip install awscli"
-  completion_file='/etc/bash_completion.d/aws'
-when 'redhat','centos','fedora','amazon','scientific'
-  file = "/usr/bin/aws"
-  cmd = "yum -y install python-pip && pip install awscli"
+when 'debian', 'ubuntu'
+  file = '/usr/local/bin/aws'
+  cmd = 'apt-get install -y python-pip && pip install awscli'
+  completion_file = '/etc/bash_completion.d/aws'
+when 'redhat', 'centos', 'fedora', 'amazon', 'scientific'
+  file = '/usr/bin/aws'
+  cmd = 'yum -y install python-pip && pip install awscli'
 end
-r = execute "install awscli" do
+r = execute 'install awscli' do
   command cmd
-  not_if { ::File.exists?(file) }
+  not_if { ::File.exist?(file) }
   if node[:awscli][:compile_time]
     action :nothing
   end
@@ -22,10 +22,10 @@ end
 
 if node[:awscli][:config_profiles]
   user = node[:awscli][:user]
-  if user == "root"
-    config_file="/#{user}/.aws/config"
+  if user == 'root'
+    config_file = "/#{user}/.aws/config"
   else
-    config_file="/home/#{user}/.aws/config"
+    config_file = "/home/#{user}/.aws/config"
   end
 
   r = directory ::File.dirname(config_file) do
@@ -33,7 +33,7 @@ if node[:awscli][:config_profiles]
     owner user
     group user
     mode 00700
-    not_if { ::File.exists?(::File.dirname(config_file)) }
+    not_if { ::File.exist?(::File.dirname(config_file)) }
     if node[:awscli][:compile_time]
       action :nothing
     end
@@ -47,7 +47,6 @@ if node[:awscli][:config_profiles]
     owner user
     group user
     source 'config.erb'
-    not_if { ::File.exists?(config_file) }
     if node[:awscli][:compile_time]
       action :nothing
     end
@@ -64,7 +63,6 @@ unless completion_file.nil?
     owner 'root'
     group 'root'
     # newline is important
-    content "complete -C aws_completer aws
-"
+    content 'complete -C aws_completer aws'
   end
 end
