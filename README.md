@@ -39,13 +39,16 @@ For example, to configure the default profile, specify the following:
         'default' : {
           'region'               : 'us-east-1',
           'aws_access_key_id'    : 'SOMESECRET',
-          'aws_secret_access_key : 'ANOTHERSECRET'
+          'aws_secret_access_key : 'ANOTHERSECRET',
+          'user'                  : 'username',
         }
       }
     }
 
 The keys and values inside the profile_key hash are placed directly into the awscli config file.
 Use this mechanism to specify additional configuration (such as output style) and additional profiles.
+
+_Note:_ The 'user' key is an exception to the above rule. If present, the 'user' key in the profile hash specifies that that config should appear in the AWS CLI config file for that particular Unix user. This functionality is helpful if you need to configure the AWS CLI for multiple users.
 
 ##### `[:awscli][:user]`
 
