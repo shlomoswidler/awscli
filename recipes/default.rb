@@ -21,38 +21,51 @@ if node[:awscli][:compile_time]
 end
 
 if node[:awscli][:config_profiles]
-  user = node[:awscli][:user]
-  if user == 'root'
-    config_file = "/#{user}/.aws/config"
-  else
-    config_file = "/home/#{user}/.aws/config"
+  default_user = node[:awscli][:user]
+  config_profiles_by_user = node[:awscli][:config_profiles].inject({}) do |hash, (profile_name, config_profile)|
+    config_profile = config_profile.dup
+    user = config_profile.delete(:user) || default_user
+    config_profiles = hash[user] ||= {}
+    config_profiles[profile_name] = config_profile
+    hash
   end
 
-  r = directory ::File.dirname(config_file) do
-    recursive true
-    owner user
-    group user
-    mode 00700
-    not_if { ::File.exist?(::File.dirname(config_file)) }
-    if node[:awscli][:compile_time]
-      action :nothing
+  config_profiles_by_user.each do |(user, config_profiles)|
+    if user == 'root'
+      config_file = "/#{user}/.aws/config"
+    else
+      config_file = "/home/#{user}/.aws/config"
     end
-  end
-  if node[:awscli][:compile_time]
-    r.run_action(:create)
-  end
 
-  r = template config_file do
-    mode 00600
-    owner user
-    group user
-    source 'config.erb'
-    if node[:awscli][:compile_time]
-      action :nothing
+    r = directory ::File.dirname(config_file) do
+      recursive true
+      owner user
+      group user
+      mode 00700
+      not_if { ::File.exist?(::File.dirname(config_file)) }
+      if node[:awscli][:compile_time]
+        action :nothing
+      end
     end
-  end
-  if node[:awscli][:compile_time]
-    r.run_action(:create)
+    if node[:awscli][:compile_time]
+      r.run_action(:create)
+    end
+
+    r = template config_file do
+      mode 00600
+      owner user
+      group user
+      source 'config.erb'
+      variables(
+        config_profiles: config_profiles,
+      )
+      if node[:awscli][:compile_time]
+        action :nothing
+      end
+    end
+    if node[:awscli][:compile_time]
+      r.run_action(:create)
+    end
   end
 end
 
