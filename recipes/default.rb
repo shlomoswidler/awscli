@@ -5,9 +5,12 @@ when 'debian', 'ubuntu'
   file = '/usr/local/bin/aws'
   cmd = 'apt-get install -y python-pip && pip install awscli'
   completion_file = '/etc/bash_completion.d/aws'
-when 'redhat', 'centos', 'fedora', 'amazon', 'scientific'
+when 'fedora', 'amazon', 'scientific'
   file = '/usr/bin/aws'
   cmd = 'yum -y install python-pip && pip install awscli'
+when 'redhat', 'centos'
+  file = '/usr/bin/aws'
+  cmd = 'easy_install pip && pip install awscli'
 end
 r = execute 'install awscli' do
   command cmd
