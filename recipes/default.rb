@@ -46,6 +46,9 @@ if node[:awscli][:config_profiles]
       if node[:awscli][:compile_time]
         action :nothing
       end
+      if not node[:awscli][:compile_time]
+        action :create
+      end
     end
     if node[:awscli][:compile_time]
       r.run_action(:create)
@@ -61,6 +64,9 @@ if node[:awscli][:config_profiles]
       )
       if node[:awscli][:compile_time]
         action :nothing
+      end
+      if not node[:awscli][:compile_time]
+        action :create
       end
     end
     if node[:awscli][:compile_time]
