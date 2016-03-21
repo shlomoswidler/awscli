@@ -71,4 +71,9 @@ credentials are ready will fail.
 
 If you specify AWS credentials in the config file, then you won't need to worry about this.
 
+To use this library method in your cookbook:
+  * Make sure your cookbook's metadata.rb has a `depends 'awscli'` entry. 
+  * In your recipe, at the point where you want to wait for the IAM metadata to become available:
+        `InstanceMetadata.wait_for_instance_IAM_metadata_to_be_available()`
+
 [1]: http://aws.amazon.com/cli/
