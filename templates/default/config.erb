@@ -1,16 +1,7 @@
 # Configuration for the awscli tool
 
-<% default_profile = @config_profiles['default']
-unless default_profile.nil? %>
-[default]
-<%  default_profile.each do |key, value| %>
-<%= key %> = <%= value %>
-<%  end
-end %>
-
-<% @config_profiles.each do |profile, options|
-next if profile=='default' %>
-[profile <%= profile %>]
+<% @config_profiles.each do |profile, options| %>
+[<% unless profile == "default" %>profile <% end %><%= profile %>]
 <%   options.each do |key, value| %>
 <%= key %> = <%= value %>
 <%   end %>
