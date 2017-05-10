@@ -21,21 +21,9 @@ if node[:awscli][:compile_time]
 end
 
 if node[:awscli][:config_profiles]
-  default_user = node[:awscli][:user]
-  config_profiles_by_user = node[:awscli][:config_profiles].inject({}) do |hash, (profile_name, config_profile)|
-    config_profile = config_profile.dup
-    user = config_profile.delete(:user) || default_user
-    config_profiles = hash[user] ||= {}
-    config_profiles[profile_name] = config_profile
-    hash
-  end
-
-  config_profiles_by_user.each do |(user, config_profiles)|
-    if user == 'root'
-      config_file = "/#{user}/.aws/config"
-    else
-      config_file = "/home/#{user}/.aws/config"
-    end
+  node[:awscli][:config_profiles].each do |user, config_profiles|
+    next unless node[:etc][:passwd].key?(user)
+    config_file = "#{node[:etc][:passwd][user][:dir]}/.aws/config"
 
     r = directory ::File.dirname(config_file) do
       recursive true
@@ -58,6 +46,43 @@ if node[:awscli][:config_profiles]
       source 'config.erb'
       variables(
         config_profiles: config_profiles,
+      )
+      if node[:awscli][:compile_time]
+        action :nothing
+      end
+    end
+    if node[:awscli][:compile_time]
+      r.run_action(:create)
+    end
+  end
+end
+
+if node[:awscli][:credentials]
+  node[:awscli][:credentials].each do |user, credentials|
+    next unless node[:etc][:passwd].key?(user)
+    config_file = "#{node[:etc][:passwd][user][:dir]}/.aws/credentials"
+
+    r = directory ::File.dirname(config_file) do
+      recursive true
+      owner user
+      group user
+      mode 00700
+      not_if { ::File.exist?(::File.dirname(config_file)) }
+      if node[:awscli][:compile_time]
+        action :nothing
+      end
+    end
+    if node[:awscli][:compile_time]
+      r.run_action(:create)
+    end
+
+    r = template config_file do
+      mode 00600
+      owner user
+      group user
+      source 'credential.erb'
+      variables(
+        credentials: credentials,
       )
       if node[:awscli][:compile_time]
         action :nothing
